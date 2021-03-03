@@ -122,6 +122,24 @@ public class LAGameManager : MonoBehaviour
         level.gameObject.SetActive(true);
     }
 
+    private void ResolveLevel(Level level)
+    {
+        bool allCorrect = true;
+        foreach (Level.Answer answer in level.answers)
+        {
+            if (answer.CheckAnswer())
+                answer.answerFeedback.text = "Resposta correcta !!!";
+            else
+            {
+                allCorrect = false;
+                answer.answerFeedback.text = "Resposta incorrecta, torna-ho a provar :(";
+            }
+        }
+
+        if (allCorrect)
+            CompleteLevel(level);
+    }
+
     public void RequestCompleteLevel(Level level)
     {
         if (level.completed)
@@ -130,29 +148,13 @@ public class LAGameManager : MonoBehaviour
         switch (level.ID)
         {
             case 1:
-                if (level.answer.text.Equals("Ludd idn Muhammad idn Lubb ibn Musa al-Qasawi idn Musa idn Furtun idn Qasi idn Furtun"))
-                {
-                    CompleteLevel(level);
-                    level.answerFeedback.text = "Resposta correcta !!!";
-                }
-                else
-                    level.answerFeedback.text = "Resposta incorrecta, torna-ho a provar :(";
+                ResolveLevel(level);
                 break;
+
             case 2:
-                
-                if (level.answer.text.Split(',').Length != 3)
-                {
-                    level.answerFeedback.text = "Epp! Us heu descuidat d'escriure totes les respostes.";
-                    return;
-                }
-                else if (level.answer.text.Equals("Ishtar,Lleida,Segre"))
-                {
-                    CompleteLevel(level);
-                    level.answerFeedback.text = "Resposta correcta !!!";
-                }
-                else
-                    level.answerFeedback.text = "Resposta incorrecta, torna-ho a provar :(";
+                ResolveLevel(level);
                 break;
+
             default:
                 break;
         }
@@ -164,7 +166,7 @@ public class LAGameManager : MonoBehaviour
         nDirkams += level.dirkams;
         dirkams.text = nDirkams.ToString();
         level.completeButton.interactable = false;
-        foreach(Level lv in level.UnlockableLevels)
+        foreach(Level lv in level.levelsUnlocked)
         {
             RequestUnlockLevel(lv);
         }

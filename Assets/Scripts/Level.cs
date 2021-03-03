@@ -11,11 +11,25 @@ public class Level : MonoBehaviour
     public bool completed = false;
     public int dirkams;
     public bool locked = true;
-    public List<Level> UnlockableLevels;
-    public InputField answer;
-    public Text answerFeedback;
+    public List<Level> levelsUnlocked;
 
     public Button completeButton;
+
+    public List<Answer> answers;
+
+    [System.Serializable]
+    public class Answer
+    {
+        public InputField answer;
+        public Text answerFeedback;
+        public string answerCheck;
+
+        public bool CheckAnswer()
+        {
+            return this.answer.text.Equals(this.answerCheck);
+        }
+    }
+        
 
     private void Awake()
     {
