@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Level : MonoBehaviour
 {
-
     public int ID;
     public string levelName;
     public bool completed = false;
@@ -16,7 +15,7 @@ public class Level : MonoBehaviour
     public Button completeButton;
 
     public List<Answer> answers;
-
+    
     [System.Serializable]
     public class Answer
     {
@@ -29,11 +28,11 @@ public class Level : MonoBehaviour
             return this.answer.text.Equals(this.answerCheck);
         }
     }
-        
 
     private void Awake()
     {
-        completeButton.onClick.AddListener(OnClickComplete);
+        if (completeButton)
+            completeButton.onClick.AddListener(OnClickComplete);
     }
 
     void OnClickComplete()
@@ -41,7 +40,12 @@ public class Level : MonoBehaviour
         LAGameManager.Instance.RequestCompleteLevel(this);
     }
 
-    
+    private void OnClickLink(string externalLink)
+    {
+        Application.OpenURL(externalLink);
+    }
+
+
 
 
 }

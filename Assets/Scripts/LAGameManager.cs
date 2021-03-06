@@ -147,15 +147,8 @@ public class LAGameManager : MonoBehaviour
 
         switch (level.ID)
         {
-            case 1:
-                ResolveLevel(level);
-                break;
-
-            case 2:
-                ResolveLevel(level);
-                break;
-
             default:
+                ResolveLevel(level);
                 break;
         }
     }
@@ -165,7 +158,8 @@ public class LAGameManager : MonoBehaviour
         level.completed = true;
         nDirkams += level.dirkams;
         dirkams.text = nDirkams.ToString();
-        level.completeButton.interactable = false;
+        if (level.completeButton)
+            level.completeButton.interactable = false;
         foreach(Level lv in level.levelsUnlocked)
         {
             RequestUnlockLevel(lv);
