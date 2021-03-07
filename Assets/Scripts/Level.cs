@@ -7,13 +7,15 @@ public class Level : MonoBehaviour
 {
     public int ID;
     public string levelName;
-    public bool completed = false;
     public int dirkams;
+
+    public bool completed = false;
+    public bool isMandatory = false;
     public bool locked = true;
+
     public List<Level> levelsUnlocked;
 
     public Button completeButton;
-
     public List<Answer> answers;
     
     [System.Serializable]
@@ -39,13 +41,5 @@ public class Level : MonoBehaviour
     {
         LAGameManager.Instance.RequestCompleteLevel(this);
     }
-
-    private void OnClickLink(string externalLink)
-    {
-        Application.OpenURL(externalLink);
-    }
-
-
-
 
 }

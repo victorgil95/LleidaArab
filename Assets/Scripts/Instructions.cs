@@ -15,6 +15,7 @@ public class Instructions : MonoBehaviour
     void OnClickInstructionsBack()
     {
         LAGameManager.Instance.BackToMainMenu();
+        LAGameManager.Instance.dirkams.gameObject.SetActive(true);
     }
 
 }

@@ -15,7 +15,8 @@ public class LAGameManager : MonoBehaviour
     }
 
     public Text dirkams;
-    private static int nDirkams = 0;
+    public static int nDirkams = 0;
+    public static string playerName;
 
     public Instructions instructions;
     public Button instructionsButton;
@@ -24,6 +25,8 @@ public class LAGameManager : MonoBehaviour
     
     public Levels levels;
     public LevelSelectorScreen levelIconsScreen;
+
+    public EndScreen endScreen;
 
     //public List<LevelSelectorIcon> levelsList = new List<LevelSelectorIcon>();
     private Dictionary<int, Level> levelsDict;
@@ -47,6 +50,8 @@ public class LAGameManager : MonoBehaviour
 
         initialScreen.gameObject.SetActive(true);
         instructions.gameObject.SetActive(false);
+        endScreen.gameObject.SetActive(false);
+        dirkams.gameObject.SetActive(false);
         levelIconsScreen.gameObject.SetActive(false);
         levels.gameObject.SetActive(false);
 
@@ -85,6 +90,7 @@ public class LAGameManager : MonoBehaviour
         initialScreen.gameObject.SetActive(false);
         levels.gameObject.SetActive(false);
         levelIconsScreen.gameObject.SetActive(false);
+        dirkams.gameObject.SetActive(false);
     }
 
     public void BackToMainMenu()
@@ -104,6 +110,15 @@ public class LAGameManager : MonoBehaviour
         initialScreen.gameObject.SetActive(false);
         levels.gameObject.SetActive(false);
         levelIconsScreen.gameObject.SetActive(true);
+    }
+
+    private void ToCompletitionScreen()
+    {
+        initialScreen.gameObject.SetActive(false);
+        levels.gameObject.SetActive(false);
+        levelIconsScreen.gameObject.SetActive(false);
+        dirkams.gameObject.SetActive(false);
+        endScreen.gameObject.SetActive(true);
     }
 
     public void RequestSelectLevel(LevelSelectorIcon levelicon)
@@ -157,7 +172,7 @@ public class LAGameManager : MonoBehaviour
     {
         level.completed = true;
         nDirkams += level.dirkams;
-        dirkams.text = nDirkams.ToString();
+        dirkams.text = "Dirkams: " + nDirkams.ToString();
         if (level.completeButton)
             level.completeButton.interactable = false;
         foreach(Level lv in level.levelsUnlocked)
@@ -167,7 +182,31 @@ public class LAGameManager : MonoBehaviour
         LevelSelectorIcon icon = levelsIconsDict[level];
         icon.SetButtonSprite(levelIconsScreen.levelCompleted);
 
-        BackToLevelSelection();
+        if (CheckAllMandatoryCompleted())
+        {
+            ToCompletitionScreen();
+        }
+        else
+        {
+            BackToLevelSelection();
+        }
+    }
+
+    private bool CheckAllMandatoryCompleted()
+    {
+        bool allCompleted = true;
+        foreach (Level level in levels.levels)
+        {
+            if (level.isMandatory && !level.completed)
+            {
+                allCompleted = false;
+            }
+        }
+
+        if (allCompleted)
+            return true;
+
+        return false;
     }
 
     public void RequestUnlockLevel(Level level)
@@ -196,5 +235,10 @@ public class LAGameManager : MonoBehaviour
             return null;
 
         return iconsLevelsDict[icon];
+    }
+
+    public void RequestChangePlayerName(string playerName)
+    {
+        LAGameManager.playerName = playerName;
     }
 }

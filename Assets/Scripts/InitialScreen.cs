@@ -8,6 +8,9 @@ public class InitialScreen : MonoBehaviour
     public Button initialScreenToLevelSelection;
     public Button initialScreenInstructions;
 
+    public InputField playerName;
+    public Text feedBackText;
+
     private void Awake()
     {
         initialScreenToLevelSelection.onClick.AddListener(OnClickInitialScreenToLevelSelection);
@@ -16,7 +19,14 @@ public class InitialScreen : MonoBehaviour
 
     void OnClickInitialScreenToLevelSelection()
     {
-        LAGameManager.Instance.BackToLevelSelection();
+        if (!string.IsNullOrEmpty(playerName.text))
+        {
+            LAGameManager.Instance.RequestChangePlayerName(playerName.text);
+            LAGameManager.Instance.BackToLevelSelection();
+            LAGameManager.Instance.dirkams.gameObject.SetActive(true);
+        }
+        else
+            feedBackText.text = "Escriu el teu nom abans de començar.";
     }
 
     void OnClickInitialScreenInstructions()
