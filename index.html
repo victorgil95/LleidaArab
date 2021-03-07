@@ -4,11 +4,11 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>LleidaArab</title>
+	<title>{{{ PRODUCT_NAME }}}</title>
 	<style>
 		html,
 		body {
-			background: #0000;
+			background: {{{ BACKGROUND || '#000' }}};
 			width: 100%;
 			height: 100%;
 			overflow: visible;
@@ -22,7 +22,16 @@
 		}
 
 		div#gameContainer canvas {
-			position: absolute;
+			position: absolute;{{{ OPTIMIZE_FOR_PIXEL_ART && `
+			image-rendering: optimizeSpeed;
+			image-rendering: -webkit-crisp-edges;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;` }}}
 		}
 	</style>
 </head>
@@ -30,16 +39,22 @@
 <body>
 	<div id="gameContainer">
 		<canvas id="unity-canvas"></canvas>
-		<script src="Build/Build.loader.js"></script>
+		<script src="Build/{{{ LOADER_FILENAME }}}"></script>
 		<script>
 			createUnityInstance(document.querySelector("#unity-canvas"), {
-				dataUrl: "Build/Build.data.br",
-				frameworkUrl: "Build/Build.framework.js.br",
-				codeUrl: "Build/Build.wasm.br",
+				dataUrl: "Build/{{{ DATA_FILENAME }}}",
+				frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+				codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+				memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+				symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
 				streamingAssetsUrl: "StreamingAssets",
-				companyName: "DefaultCompany",
-				productName: "LleidaArab",
-				productVersion: "1.0",
+				companyName: "{{{ COMPANY_NAME }}}",
+				productName: "{{{ PRODUCT_NAME }}}",
+				productVersion: "{{{ PRODUCT_VERSION }}}",
 			}).then(function (instance) {
 				var canvas = instance.Module.canvas;
 				var container = canvas.parentElement;
@@ -51,15 +66,15 @@
 						w = window.innerWidth;
 						h = window.innerHeight;
 
-						var r = 768 / 1024;
+						var r = {{{ HEIGHT }}} / {{{ WIDTH }}};
 
 						if (w * r > window.innerHeight) {
 							w = Math.min(w, Math.ceil(h / r));
 						}
 						h = Math.floor(w * r);
 					} else {
-						w = 1024;
-						h = 768;
+						w = {{{ WIDTH }}};
+						h = {{{ HEIGHT }}};
 					}
 
 					container.style.width = canvas.style.width = w + "px";
@@ -70,7 +85,7 @@
 
 				var scaleToFit;
 				try {
-					scaleToFit = !!JSON.parse("true");
+					scaleToFit = !!JSON.parse("{{{ SCALE_TO_FIT }}}");
 				} catch (e) {
 					scaleToFit = true;
 				}
